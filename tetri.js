@@ -1,0 +1,87 @@
+let col = 10;
+let row = 16;
+let grid = [];
+let tam = 40;
+let state = true;
+var blocks = [];
+let r = 0;
+let e = 0;
+let bloque;
+let increx = 0;
+let coli=true;
+
+
+
+
+function setup() {
+  createCanvas(400, 600);
+  fill(255, 0, 0);
+  for (var i = 0; i < row; i++) { //GRID 2D
+    grid.push([]);
+    for (var p = 0; p < col; p++) {
+      grid[i][p] = 0;
+    }
+  }
+
+  for (var t = 0; t < col; t++) { //base
+    grid[15][t] = 1;
+  }
+
+  frameRate(10);
+  bloque = darForma(floor(random(0,4)));
+}
+
+
+
+function draw() {
+  background(51, 51, 51);
+  coli=true;
+  for (var i = bloque.length - 1; i >= 0; i--) {//solo la colision
+    if (bloque[i].colision() == true) {
+      coli=false; //colision
+    }
+  }
+
+
+  if (coli==true) {
+    for (var u = bloque.length - 1; u >= 0; u--) {
+      bloque[u].show();
+      bloque[u].move(increx);
+    }
+  }else{
+    for (var u = bloque.length - 1; u >= 0; u--) {
+      grid[bloque[u].y][bloque[u].x] = 1;
+    }
+    bloque = darForma(floor(random(0,4)));
+  }
+  increx = 0;
+
+
+
+
+  for (var i = 0; i < grid.length; i++) { //rectangulos at grid =1
+    for (var j = 0; j < grid[i].length; j++) {
+      if (grid[i][j] == 1) {
+        rect(j * tam, i * tam, tam, tam);
+      }
+    }
+  }
+
+
+
+}
+
+
+
+
+
+function keyPressed() { //Presion de teclas
+  if (keyCode === LEFT_ARROW) {
+    increx = -1;
+
+
+  } else if (keyCode === RIGHT_ARROW) {
+    increx = 1;
+  }
+
+}
