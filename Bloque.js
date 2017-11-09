@@ -1,16 +1,13 @@
 class Bloque {
   constructor(tempX, tempY) {
-    this.x = tempX;
-    this.y = tempY;
-    this.state = true;
-    this.f = floor(random(0, 1));
+    this.x =tempX;
+    this.y=tempY;
+    this.r;
+    this.u;
   }
 
   colision() {
     if (grid[this.y + 1][this.x] == 1) {
-      //this.state = false;
-      //blocks.push(darForma(0));
-      //grid[this.y][this.x] = 1;
       return true;
     }
   }
@@ -18,7 +15,14 @@ class Bloque {
   move(increx) {
     this.y += 1;
     this.x += increx;
+  }
 
+
+  rotacion(ejex,ejey){
+    this.r=(this.y-ejey)+ejex;
+    this.u=(-1)*(this.x-ejex)+ejey;
+    this.x=this.r;
+    this.y=this.u;
   }
 
   show() {
