@@ -76,11 +76,26 @@ function draw() {
 
 
 function keyPressed() { //Presion de teclas
-  if (keyCode === LEFT_ARROW) {
-    increx =-1;
-  } else if (keyCode === RIGHT_ARROW) {
-    increx =+1;
-  } else if (keyCode===68) {
+  let bd=true;
+  let bz=true;
+  for(var i=0;i<bloque.length;i++){
+    if (grid[bloque[i].y][bloque[i].x+1]==1){
+      bd=false;
+    }if (grid[bloque[i].y][bloque[i].x-1]==1){
+      bd=false
+    }
+  }
+  if(bd==true){
+      if (keyCode === LEFT_ARROW) {
+        increx =-1;
+      }
+  }
+  if (bz==true){
+    if (keyCode === RIGHT_ARROW) {
+      increx =+1;
+    }
+  }
+if (keyCode===68) {
     for(var i=bloque.length-1;i>=0;i--){
       bloque[i].rotacion(bloque[1].x,bloque[1].y);
     }
