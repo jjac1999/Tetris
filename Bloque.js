@@ -7,13 +7,13 @@ class Bloque {
   }
 
   colision() {
-    if (grid[this.y + 1][this.x] == 1) {
+    if (grid[this.y + 1][this.x] == 1 || grid[this.y + 1][this.x] == 2) {
       return true;
     }
   }
 
-  move(increx) {
-    this.y += 1;
+  move(increx,increy) {
+    this.y += increy;
     this.x += increx;
   }
 

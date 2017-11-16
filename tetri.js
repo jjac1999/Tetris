@@ -1,4 +1,4 @@
-let col = 10;
+let col = 12;
 let row = 16;
 let grid = [];
 let tam = 40;
@@ -8,6 +8,7 @@ let r = 0;
 let e = 0;
 let bloque;
 let increx = 0;
+let increy=0;
 let coli=true;
 let curx=5*tam;
 let cury=tam;
@@ -23,9 +24,12 @@ function setup() {
       grid[i][p] = 0;
     }
   }
-
+  for (var i=0;i<grid.length;i++){
+    grid[i][0]=2;
+    grid[i][11]=2;
+  }
   for (var t = 0; t < col; t++) { //base
-    grid[15][t] = 1;
+    grid[15][t] = 2;
   }
   translate(curx,cury);
   frameRate(10);
@@ -38,7 +42,7 @@ function setup() {
 function draw() {
   background(51, 51, 51);
   coli=true;
-  for (var i = bloque.length - 1; i >= 0; i--) {
+  for (var i =0; i <bloque.length; i++) {
     if (bloque[i].colision() == true) {//revisa colision
       coli=false;
     }
@@ -48,8 +52,9 @@ function draw() {
   if (coli==true) {//si no hay colision mueve y muestra
     for (var u = bloque.length - 1; u >= 0; u--) {
       bloque[u].show();
-      bloque[u].move(increx);
+      bloque[u].move(increx,increy);
     }
+    increy=1;
   }else{//si hay cambia el grid de 0 a 1
     for (var u = bloque.length - 1; u >= 0; u--) {
       grid[bloque[u].y][bloque[u].x] = 1;
@@ -61,14 +66,33 @@ function draw() {
 
 
 
+  let co=0;
 
-  for (var i = 0; i < grid.length; i++) { //Relleno at grid =1
+  for (var i = 0; i < grid.length; i++) {
+    for (var j = 0; j < grid[i].length; j++) {
+      if(grid[i][j]==1){
+        co+=1
+      }
+    }
+
+    if (co==8){
+      for (var j=0;j<grid[i].length;j++){
+        grid[i][j]=grid[i-1][j]
+      }
+    }
+    co=0
+  }
+
+
+  for (var i = 0; i <grid.length ; i++) { //Relleno at grid =1
     for (var j = 0; j < grid[i].length; j++) {
       if (grid[i][j] == 1) {
         rect(j * tam, i * tam, tam, tam);
       }
     }
   }
+
+
 }
 
 
@@ -88,6 +112,7 @@ function keyPressed() { //Presion de teclas
   if(bd==true){
       if (keyCode === LEFT_ARROW) {
         increx =-1;
+        increy=0;
       }
   }
   if (bz==true){
