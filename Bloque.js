@@ -1,7 +1,7 @@
 class Bloque {
   constructor(tempX, tempY) {
-    this.x =tempX;
-    this.y=tempY;
+    this.x = tempX;
+    this.y = tempY;
     this.r;
     this.u;
   }
@@ -12,17 +12,17 @@ class Bloque {
     }
   }
 
-  move(increx,increy) {
+  move(increx, increy) {
     this.y += increy;
     this.x += increx;
   }
 
 
-  rotacion(ejex,ejey){
-    this.r=(this.y-ejey)+ejex;
-    this.u=(-1)*(this.x-ejex)+ejey;
-    this.x=this.r;
-    this.y=this.u;
+  rotacion(ejex, ejey) {
+    this.r = (this.y - ejey) + ejex;
+    this.u = (-1) * (this.x - ejex) + ejey;
+    this.x = this.r;
+    this.y = this.u;
   }
 
   show() {
