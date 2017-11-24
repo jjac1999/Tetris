@@ -27,8 +27,8 @@ function setup() {
   }
   frameRate(60);
   //declaracion de el bloque y el preview
-  bloque = darForma(floor(random(0, 4)));
-  prev = darForma(floor(random(0, 4)));
+  bloque = darForma(floor(random(0, 7)));
+  prev = darForma(floor(random(0, 7)));
 }
 
 
@@ -37,14 +37,14 @@ function layout(prev, score) {
   background(51, 51, 51);
   fill(100, 150, 200)
   rect(400, 0, 300, 600);
-  fill(200, 200, 200, 100);
+  fill(255, 100);
   textSize(50);
   text("Score", 450, 70);
   text(str(score), 500, 170);
   rect(450, 100, 200, 100);
-  text("Siguiente", 450, 300);
-  fill(200, 200, 200, 150);
-  rect(430, 330, 240, 240);
+  text("Siguiente", 450, 340);
+  fill(255, 150);
+  rect(450, 360, 200, 200);
   fill(255, 0, 0);
   //posicion y mostrar el preview
   for (var i = 0; i < prev.length; i++) {
@@ -98,7 +98,8 @@ let contadores = [0, 0, 0, 0];
 //[0]=abajo en y;[1] tecla abajo ; [2]=teclas dere izq ; [3]=rotacion
 let left = true;
 let right = true;
-
+let permrot = 0;
+let permcrear=true;
 function draw() {
   layout(prev, score);
   coli = false;
@@ -113,9 +114,11 @@ function draw() {
     //colision bordes a los lados y otros bloques previene mov en x
     if (bloque[i].x <= 0 || grid[bloque[i].y][bloque[i].x - 1] == 1) {
       left = false;
+      permrot += 1;
     }
     if (bloque[i].x >= 9 || grid[bloque[i].y][bloque[i].x + 1] == 1) {
       right = false;
+      permrot += 1;
     }
   }
   if (contadores[0] > 40) { //timeout de el movimiento hacia abajo
@@ -136,15 +139,15 @@ function draw() {
   }
   right = true;
   //rotacion
-  if (keyIsDown(68) && contadores[3] > 15) {
+  if (keyIsDown(68) && contadores[3] > 15 && permrot < 2) {
     for (var i = bloque.length - 1; i >= 0; i--) {
-      bloque[i].rotacion(bloque[1].x, bloque[1].y);
+        bloque[i].rotacion(bloque[1].x, bloque[1].y);
     }
-    console.log("asd");
     contadores[3] = 0;
   }
+  permrot = 0;
   //tecla hacia abajo
-  if (keyIsDown(DOWN_ARROW) && contadores[1] > 5) {
+  if (keyIsDown(DOWN_ARROW) && contadores[1] > 10) {
     increy += 1;
     contadores[1] = 0;
   }
@@ -162,8 +165,27 @@ function draw() {
     for (var u = bloque.length - 1; u >= 0; u--) {
       grid[bloque[u].y][bloque[u].x] = 1;
     }
-    bloque = prev
-    prev = darForma(floor(random(0, 4))); //reinicia el bloque
+    if(permcrear==true){//deja de crear bloque cuando gameover
+      bloque = prev
+      prev = darForma(floor(random(0, 4))); //reinicia el bloque
+    }
+  }
+  for (var i = 0; i < bloque.length; i++) {
+    if (grid[bloque[i].y][bloque[i].x] == 1) {
+      if (keyIsPressed === false) {//si gameover, hasta presiona tecla
+        textSize(50)
+        text("GAME OVER", 400, 250);
+        textSize(18);
+        text("Presiona una tecla para continuar", 415, 300);
+        console.log("game o");
+        permcrear=false;
+      }else{
+        setup();// se llama todo otra vez
+        draw();
+        permcrear=true;
+      }
+
+    }
   }
   increx = 0;
   filallena();

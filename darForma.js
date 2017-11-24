@@ -26,8 +26,14 @@ function darForma(q) {
       form.push(new Bloque(3, 1));
       break;
 
+    case 3: //L invertida
+      for (var i = 0; i < 3; i++) {
+        form.push(new Bloque(i + 3, 0));
+      }
+      form.push(new Bloque(i + 2, 1));
+      break;
 
-    case 3: //T
+    case 4: //T
       for (var i = 0; i < 3; i++) {
         form.push(new Bloque(i + 3, 0));
       }
@@ -35,12 +41,21 @@ function darForma(q) {
       break;
 
 
-    case 4: //lineas seguidas
+    case 5: //lineas seguidas
       for (var i = 0; i < 2; i++) {
         form.push(new Bloque(i + 3, 0));
       }
       for (var j = 0; j < 2; j++) {
         form.push(new Bloque(j + 4, 1));
+      }
+      break;
+
+    case 6: //lineas seguidas
+      for (var i = 0; i < 2; i++) {
+        form.push(new Bloque(i + 4, 0));
+      }
+      for (var j = 0; j < 2; j++) {
+        form.push(new Bloque(j + 3, 1));
       }
       break;
   }
