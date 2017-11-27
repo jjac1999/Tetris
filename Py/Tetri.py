@@ -13,7 +13,6 @@ green = (0, 255, 0)
 tam = 40
 row = 15
 col = 10
-#grid = []
 blocks = []
 pygame.init()
 screen = pygame.display.set_mode((700, 600))
@@ -22,11 +21,6 @@ myfont = pygame.font.SysFont("Arial", 50)
 colo0 = (random.randrange(100, 255), random.randrange(
      100, 255), random.randrange(100, 255))
 
-# for i in range(0, row):  # grid 2D
-#     f = []
-#     for j in range(0, col):
-#         f.append(0)
-#     grid.append(f)
 
 
 
@@ -76,19 +70,19 @@ def darForma(q):
             form.append(Bloque(i + 3, 0))
         form.append(Bloque(i + 2, 1))
     elif q == 5:  # lineas seguidas
-        for i in range(1, 0, -1):
+        for i in range(0, 2):
             form.append(Bloque(i + 3, 0))
         for j in range(0, 2):
             form.append(Bloque(j + 4, 1))
     elif q == 6:  # lineas seguidas
-        for i in range(1, 0, -1):
+        for i in range(1, -1, -1):
             form.append(Bloque(i + 4, 0))
         for j in range(0, 2):
             form.append(Bloque(j + 3, 1))
     return form
 
 
-def layout(score):
+def layout():
     screen.fill(grey)
     screen.fill((100, 150, 200), rect=[400, 0, 300, 600])
     screen.fill((255, 255, 255), rect=[450, 100, 200, 100])
@@ -115,6 +109,7 @@ def filallena(score):
     fi = 14
     fj = 0
     te = 0
+    cantidad=0
     while(fi >= 0):
         while(fj < len(grid[fi])):
             if(grid[fi][fj] != 0):
@@ -125,13 +120,24 @@ def filallena(score):
             while(te > 0):
                 grid[te] = grid[te - 1][:]
                 te -= 1
-            score += 10
+            cantidad += 1
             co = 0
         else:
             fi -= 1
             co = 0
         fj = 0
+    if cantidad==0:
+        score+=0
+    elif cantidad==1:
+        score+=40
+    elif cantidad==2:
+        score+=100
+    elif cantidad==3:
+        score+=300
+    elif cantidad==4:
+        score+=1200
     return score
+
 def setup():
     colo0 = (random.randrange(100, 255), random.randrange(
         100, 255), random.randrange(100, 255))
@@ -164,12 +170,12 @@ def main():
     global score
     score = 0
     global bloque
-    bloque = darForma(random.randrange(4))
+    bloque = darForma(random.randrange(6))
     global prev
-    prev = darForma(random.randrange(4))
+    prev = darForma(random.randrange(6))
 
     while state:  # main loop
-        layout(score)
+        layout()
         coli = False
         contadores[0] += 1
         contadores[1] += 1
@@ -179,13 +185,13 @@ def main():
         for i in range(0, len(bloque)):  # revisar la colision
             if(bloque[i].colision() == True):
                 coli = True
-            if(bloque[i].x <= 0 or grid[bloque[i].y][bloque[i].x - 1] ==1):
+            if(bloque[i].x <= 0 or grid[bloque[i].y][bloque[i].x - 1] ==1):#colision a la izquierda, bordes o bloques
                 left = False
                 permrot += 1
-            if(bloque[i].x >= 9 or grid[bloque[i].y][bloque[i].x + 1] ==1):
+            if(bloque[i].x >= 9 or grid[bloque[i].y][bloque[i].x + 1] ==1):#colision a la derecha, bordes o bloques
                 right = False
                 permrot += 1
-            if(bloque[i].y - 1 < 0):
+            if(bloque[i].y - 1 < 0):#impide rotacion si no hay espacio arriba
                 permrot += 1
 
         if(contadores[0] > 40):  # movimiento en y timeout
@@ -193,10 +199,10 @@ def main():
             contadores[0] = 0
 
         for event in pygame.event.get():  # manejo eventos/ keyboard
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:#salida del juego
                 state = False
                 return
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:#presionado de teclas
                 # flecha derecha "d"
                 if event.key == pygame.K_d and right == True and contadores[2] > 5:
                     increx += 1
@@ -236,14 +242,14 @@ def main():
             if(permcrear == True):
                 # se declaran los colores otra vez
                 bloque = prev
-                prev = darForma(random.randrange(0, 4))
+                prev = darForma(random.randrange(6))
                 for qi in range(0, len(bloque)):
                     if(grid[bloque[qi].y][bloque[qi].x] != 0):#revisa si se sobreponen
                         pygame.time.wait(5)
                         permcrear = False
                         main()
                         permcrear = True
-        filallena(score)
+        score=filallena(score)
         pygame.display.update()
         clock.tick(60)
 
