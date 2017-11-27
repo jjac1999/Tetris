@@ -1,5 +1,5 @@
 let col = 10;
-let row = 15;
+let row = 16;
 let tam = 40;
 var blocks = [];
 let bloque;
@@ -22,18 +22,18 @@ function setup() {
   // }
   colo0 = floor(random(100, 255));
   colo1 = floor(random(100, 255));
-  grid = [];
-  for (var i = 0; i < row; i++) { //GRID 2D
-    grid.push([]);
-    for (var p = 0; p < col; p++) {
-      grid[i][p] = 0;
-    }
-  }
   frameRate(60);
   //declaracion de el bloque y el preview
   bloque = darForma(floor(random(0, 7)), colo0);
   prev = darForma(floor(random(0, 7)), colo1);
 }
+
+// function altsetup() {
+//   colo0 = floor(random(100, 255));
+//   colo1 = floor(random(100, 255));
+//   bloque = darForma(floor(random(0, 7)), colo0);
+//   prev = darForma(floor(random(0, 7)), colo1);
+// }
 
 function layout(prev, score) {
   background(51, 51, 51);
@@ -59,7 +59,7 @@ function layout(prev, score) {
   //Relleno at grid ==bloque
   for (var i = 0; i < grid.length; i++) {
     for (var j = 0; j < grid[i].length; j++) {
-      if (grid[i][j] != 0) {
+      if (grid[i][j] != 0 && grid[i][j] != 2) {
         grid[i][j].show();
       }
     }
@@ -68,38 +68,40 @@ function layout(prev, score) {
 
 
 function filallena() {
-  let co = 0;
-  let i = 14;
-  let j = 0;
-  let te = 0;
-  while (i >= 0) {
-    while (j < grid[1].length) { //revisa la fila
-      if (grid[i][j] !=0) { //si hay un 1 co++
-        co += 1;
+  let fco = 0;
+  let fi = 14;
+  let fj = 0;
+  let fe = 0;
+  while (fi >= 0) {
+    while (fj < grid[1].length) { //revisa la fila
+      if (grid[fi][fj] !=0 && grid[fi][fj] !=2) { //si hay un 1 co++
+        fco += 1;
       }
-      j += 1;
+      fj += 1;
     }
-    if (co >= 10) {// si esque esta llena
-      te = i;
-      while (te > 0) {// se translada
-        grid[te] = grid[te - 1];
-        for(var ty=0;ty<10;ty++){
-          grid[te][ty].y+=1;
-        }
-        te -= 1;
+    if (fco >= 10) {
+      console.log("llena");
+      fe = fi;
+      while (fe > 0) {//cambio del grid// lineas que bajan
+        grid[fe] = grid[fe - 1];
+        bloque[fe][fi].y-=1;
+        fe -= 1;
         score += 10;
       }
-      co = 0;
-    } else {//sino pasa a la siguiente fila
-      i -= 1;
-      co = 0;
+
+    } else {
+      fi -= 1;
     }
-    j = 0;
+    fco = 0;
+    fj = 0;
+
+
+
+
   }
   return score
 
 }
-
 
 
 
@@ -132,7 +134,7 @@ function draw() {
       right = false;
       permrot += 1;
     }
-    if (bloque[i].y - 1 < 0) {
+    if(bloque[i].y-1 <0){
       permrot += 1;
     }
   }
@@ -178,11 +180,10 @@ function draw() {
       bloque[u].move(increx, increy);
 
     }
-    increx = 0;
     increy = 0;
   } else { //si hay cambia el grid de 0 a 1
     for (var u = bloque.length - 1; u >= 0; u--) {
-      grid[bloque[u].y][bloque[u].x] = new Bloque(bloque[u].x, bloque[u].y, bloque[u].color);
+      grid[bloque[u].y][bloque[u].x] = new estatico(bloque[u].x, bloque[u].y, bloque[u].color);
     }
     if (permcrear == true) { //deja de crear bloque cuando gameover
       //se declara otra vez el color
@@ -193,25 +194,29 @@ function draw() {
       // }
       bloque = prev;
       prev = darForma(floor(random(0, 4)), colo1); //reinicia el bloque
-      for (var qi = 0; qi < bloque.length; qi++) {//revisa si se superpone
-        if (grid[bloque[qi].y][bloque[qi].x] != 0) {
-          if (keyIsPressed === false) { //si gameover, not reset hasta presionar tecla
-            textSize(50)
-            text("GAME OVER", 400, 250);
-            textSize(18);
-            text("Presiona una tecla para continuar", 415, 300);
-            console.log("game o");
-            permcrear = false;
-          } else { // se llama todo otra vez si se presiona
-            console.log("game o");
-            setup();
-            draw();
-            permcrear = true;
-          }
-        }
-      }
     }
   }
+
+
+
+  for (var i = 0; i < bloque.length; i++) {
+    if (grid[bloque[i].y][bloque[i].x] != 0) {
+      if (keyIsPressed === false) { //si gameover, hasta presiona tecla
+        textSize(50)
+        text("GAME OVER", 400, 250);
+        textSize(18);
+        text("Presiona una tecla para continuar", 415, 300);
+        console.log("game o");
+        permcrear = false;
+      } else { // se llama todo otra vez
+        setup();
+        draw();
+        permcrear = true;
+      }
+
+    }
+  }
+  increx = 0;
   filallena();
 
 }

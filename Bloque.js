@@ -1,13 +1,14 @@
 class Bloque {
-  constructor(tempX, tempY) {
+  constructor(tempX, tempY, tempcol) {
     this.x = tempX;
     this.y = tempY;
+    this.color = tempcol;
     this.r;
     this.u;
   }
 
   colision() {
-    if (grid[this.y + 1][this.x] == 1 || grid[this.y + 1][this.x] == 2) {
+    if (this.y > 13 || grid[this.y + 1][this.x] != 0) {
       return true;
     }
   }
@@ -25,7 +26,9 @@ class Bloque {
     this.y = this.u;
   }
 
-  show() {
+  show() {;
+    //fill(this.color[0],this.color[1],this.color[2]);
+    fill(this.color);
     rect(this.x * tam, this.y * tam, tam, tam);
   }
 }
